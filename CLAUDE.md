@@ -77,6 +77,22 @@ freewrite/
 └── AGENTS.md                     # Duplicate of this file
 ```
 
+## Phase 1 foundations
+
+`freewrite/Storage/StorageLocation.swift` owns the sandbox-aware entries root;
+ContentView still creates directories and keeps existing filenames and video paths.
+See `docs/STORAGE.md` for the verified signing and storage findings.
+`freewrite/Storage/EntryFrontmatter.swift` provides a standalone, lossless optional
+metadata codec. It is deliberately not connected to the editor or autosave yet:
+the existing loader strips newlines and saves the entire editor string. Do not
+add metadata to live entries until body-only editing and metadata retention are wired.
+`freewrite/Security/KeychainStore.swift` wraps local generic passwords under
+`com.calli.secrets`, with status-only errors and no logging. No publishing clients
+are implemented. The only added entitlement is outgoing network client access.
+Unit tests compile the storage helpers directly without an app host, so they do
+not launch ContentView or access personal entries. Run only the unit-test target;
+the upstream UI-test templates launch the real app.
+
 ## Data Model
 
 ### Entry Types
