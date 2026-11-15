@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		CA1100010000000000000001 /* StorageLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1100010000000000000003; };
+		CA1100010000000000000002 /* EntryFrontmatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1100010000000000000004; };
 		2800F7412DA1CEA0008FE5F9 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2800F7402DA1CE9A008FE5F9 /* .gitignore */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +30,8 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		CA1100010000000000000003 /* StorageLocation.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Storage/StorageLocation.swift; sourceTree = SOURCE_ROOT; };
+		CA1100010000000000000004 /* EntryFrontmatter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Storage/EntryFrontmatter.swift; sourceTree = SOURCE_ROOT; };
 		2800F7402DA1CE9A008FE5F9 /* .gitignore */ = {isa = PBXFileReference; lastKnownFileType = text; path = .gitignore; sourceTree = "<group>"; };
 		2857D4702D5F8A8000EE1012 /* freewrite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = freewrite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2857D4812D5F8A8100EE1012 /* freewriteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = freewriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -250,6 +254,8 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CA1100010000000000000001,
+				CA1100010000000000000002,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -483,7 +489,7 @@
 		2857D4992D5F8A8100EE1012 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
+				BUNDLE_LOADER = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6D7X9GGZAW;
@@ -498,7 +504,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/freewrite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/freewrite";
+				TEST_HOST = "";
 				XROS_DEPLOYMENT_TARGET = 2.1;
 			};
 			name = Debug;
@@ -506,7 +512,7 @@
 		2857D49A2D5F8A8100EE1012 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
-				BUNDLE_LOADER = "$(TEST_HOST)";
+				BUNDLE_LOADER = "";
 				CODE_SIGN_STYLE = Automatic;
 				CURRENT_PROJECT_VERSION = 1;
 				DEVELOPMENT_TEAM = 6D7X9GGZAW;
@@ -521,7 +527,7 @@
 				SWIFT_EMIT_LOC_STRINGS = NO;
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2,7";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/freewrite.app/$(BUNDLE_EXECUTABLE_FOLDER_PATH)/freewrite";
+				TEST_HOST = "";
 				XROS_DEPLOYMENT_TARGET = 2.1;
 			};
 			name = Release;
