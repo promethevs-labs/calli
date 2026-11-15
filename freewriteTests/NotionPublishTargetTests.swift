@@ -2,6 +2,10 @@ import Foundation
 import Testing
 
 struct NotionPublishTargetTests {
+    @Test func tokenAccountMatchesInstalledCredential() {
+        #expect(NotionConfiguration.tokenAccount == "notion-token")
+    }
+
     private let fakeToken = "test-credential-placeholder"
     private let document = PublishDocument(title: "A title", markdown: "# Heading\n\nBody\n", localEntryID: "local-entry")
 

@@ -100,7 +100,7 @@ block chunker and file sync service. Nothing is wired to ContentView or autosave
 Tests use an in-memory mock and dummy authorization data, never URLSession or the
 Keychain. No live Notion requests or secret writes are part of Phase 2.
 `NotionConfiguration.swift` owns both Blog Posts ids and API version 2026-03-11.
-The production token provider reads `notion.token` from `com.calli.secrets`.
+The production token provider reads `notion-token` from `com.calli.secrets`.
 
 Create sends Status `writing`; update sends Status only for an explicit supported
 `calli_status`. Without a remote read, an explicit local status can overwrite a
@@ -116,6 +116,11 @@ automatic network retries. A lost create response or process exit before durable
 ID write-back still needs manual reconciliation in Notion to avoid a duplicate.
 The fallback chunker is standalone, not an automatic append retry after a partial
 markdown operation. See `docs/NOTION.md` before any separately authorized live test.
+`scripts/notion-live-test.sh --compile-only` builds the opt-in smoke harness without
+Keychain or network access. Live execution requires `CALLI_LIVE_TEST=1` and passes
+the token only through `CALLI_NOTION_TOKEN`. Its transport restricts requests to
+one create and the two update PATCHes for that returned page, blocking recreation
+and redirects. Never run it as part of routine tests.
 
 ## Data Model
 
