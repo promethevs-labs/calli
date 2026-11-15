@@ -18,6 +18,38 @@ private final class RecordingPublishTarget: PublishTarget {
     }
 }
 
+/// Suspends only the first request; subsequent requests return immediately.
+private actor SuspendedNotionClient: NotionHTTPClient {
+    private(set) var requestCount = 0
+    private var response: CheckedContinuation<Void, Error>?
+    private var received: CheckedContinuation<Void, Never>?
+
+    func waitForRequest() async {
+        if requestCount > 0 { return }
+        await withCheckedContinuation { received = $0 }
+    }
+
+    func resume(failing: Bool) {
+        if failing { response?.resume(throwing: URLError(.notConnectedToInternet)) }
+        else { response?.resume() }
+        response = nil
+    }
+
+    func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
+        requestCount += 1
+        if requestCount == 1 {
+            try await withCheckedThrowingContinuation { continuation in
+                response = continuation
+                received?.resume()
+                received = nil
+            }
+        }
+        return (Data(#"{"id":"created-page"}"#.utf8),
+                HTTPURLResponse(url: request.url!, statusCode: 200,
+                                httpVersion: nil, headerFields: nil)!)
+    }
+}
+
 struct NotionSyncServiceTests {
     private func fixture(_ source: String) throws -> URL {
         let dir = FileManager.default.temporaryDirectory.appendingPathComponent(UUID().uuidString)
@@ -111,6 +143,47 @@ struct NotionSyncServiceTests {
             try await NotionSyncService(target: target).sync(entryURL: url)
         }
         #expect(target.documents.isEmpty)
+    }
+
+    @Test(arguments: [false, true])
+    func overlappingSyncIsRefusedAndCleared(failing: Bool) async throws {
+        let url = try fixture("# Title\nBody")
+        defer { try? FileManager.default.removeItem(at: url.deletingLastPathComponent()) }
+        let client = SuspendedNotionClient()
+        let target = NotionPublishTarget(client: client, tokenProvider: { "test-credential-placeholder" })
+        let service = NotionSyncService(target: target)
+        let first = Task { try await service.sync(entryURL: url) }
+        await client.waitForRequest()
+        // Exercise normalization as well as the exact same URL.
+        let alias = url.deletingLastPathComponent().appendingPathComponent(".")
+            .appendingPathComponent(url.lastPathComponent)
+        for candidate in [url, alias] {
+            await #expect(throws: NotionSyncService.Failure.alreadySyncing) {
+                try await service.sync(entryURL: candidate)
+            }
+        }
+        #expect(await client.requestCount == 1)
+        await client.resume(failing: failing)
+        if failing {
+            await #expect(throws: NotionPublishError.transport) { try await first.value }
+        } else {
+            #expect(try await first.value.remoteId == "created-page")
+        }
+        #expect(try await service.sync(entryURL: url).remoteId == "created-page")
+        // Successful creates are followed by two update PATCHes; failed creates retry once.
+        #expect(await client.requestCount == (failing ? 2 : 3))
+    }
+
+    @Test func fencedCodeDoesNotSupplyTitle() {
+        #expect(NotionSyncService.title(from:
+            "````markdown\n```swift\n# Not a title\n```\n````\n# Real title") == "Real title")
+        #expect(NotionSyncService.title(from:
+            "   ~~~~markdown\n~~~\n# Not a title\n```\n~~~~ trailing\n# Still code\n  ~~~~~\t\n# Real title") == "Real title")
+        #expect(NotionSyncService.title(from:
+            " ```swift\n    ```\n# Not a title\n``` trailing\n# Still code\n  ````\n# Real title") == "Real title")
+        #expect(NotionSyncService.title(from: "Introduction\n# Normal heading\nBody") == "Normal heading")
+        #expect(NotionSyncService.title(from: "    ```\n# Normal heading") == "Normal heading")
+        #expect(NotionSyncService.title(from: "```invalid`info\n# Normal heading") == "Normal heading")
     }
 
     @Test func extractsHeadingOrFirstNonemptyLine() {

@@ -73,15 +73,30 @@ actor NotionSyncService {
 
     static func title(from markdown: String) -> String {
         let lines = markdown.components(separatedBy: .newlines)
-        var fence: Character?
+        var fence: (character: Character, length: Int)?
         var firstLine: String?
         var previousLine: String?
         for raw in lines {
             let line = raw.trimmingCharacters(in: .whitespaces)
             if firstLine == nil && !line.isEmpty { firstLine = line }
-            if line.hasPrefix("```") || line.hasPrefix("~~~") {
-                if fence == line.first { fence = nil }
-                else if fence == nil { fence = line.first }
+            let indentation = raw.prefix(while: { $0 == " " }).count
+            let fenceLine = raw.dropFirst(indentation)
+            if indentation <= 3, let character = fenceLine.first,
+               character == "`" || character == "~" {
+                let length = fenceLine.prefix(while: { $0 == character }).count
+                let remainder = fenceLine.dropFirst(length)
+                if let opening = fence {
+                    if character == opening.character, length >= opening.length,
+                       remainder.allSatisfy({ $0 == " " || $0 == "\t" }) {
+                        fence = nil
+                    }
+                } else if length >= 3,
+                          character != "`" || !remainder.contains("`") {
+                    fence = (character, length)
+                } else {
+                    previousLine = line
+                    continue
+                }
                 previousLine = nil
                 continue
             }
