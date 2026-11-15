@@ -44,6 +44,5 @@
 ## Later (not scheduled)
 
 - Browser-driver fallback if unofficial Substack routes break.
-- Optional push of a video transcript as a draft.
 - Optional folder rename from `Freewrite` to `Calli`, and a later app display name / bundle id change.
 - Ordinary cleanup of unused leftovers, and any careful fix to the Chat URL or stale welcome-guide guard.
