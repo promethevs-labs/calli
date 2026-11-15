@@ -64,3 +64,7 @@ playground.xcworkspace
 
 # Icon?
 Icon?
+
+# Local Xcode verification
+.build-dd/
+!freewrite.xcodeproj/xcshareddata/xcschemes/freewrite.xcscheme
