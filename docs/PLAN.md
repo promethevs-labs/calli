@@ -25,7 +25,7 @@ First sync is one-way push into Wenlong's capyscript workspace, using the offici
 Prefer the markdown endpoints on `Notion-Version: 2026-03-11`: `POST /v1/pages` with `markdown` and `markdown_version: "v2"` to create, and `PATCH /v1/pages/:page_id/markdown` with `replace_content` to update. If frontmatter already has a page id, update that page; if the update is not found, create one and store the new id. Persist a new id before any retry, so the operation stays idempotent. The target is the existing [Blog Posts](https://app.notion.com/p/capyscript/30830b139a6480dbad67f1c9244194d4) database in capyscript (data source `collection://30830b13-9a64-80c6-8bb0-000b67499f3d`). Calli maps onto its current properties and never changes the schema; any schema change goes through [HS] Lead first.
 
 - `Title` (title) comes from the entry's first heading or first line.
-- `Status` (status) is set to `writing` on first push. Calli only writes `concept`, `writing`, `paused` or `published`, and never overwrites `kiv`, `not worth` or `give up` if Wenlong set them in Notion.
+- `Status` (status) is set to `writing` on first push. Calli only writes `concept`, `writing`, `paused` or `published`, and omits Status on update unless frontmatter explicitly sets `calli_status`. Phase 2 performs no remote read: omission preserves `kiv`, `not worth` or `give up`, but an explicit local status can overwrite them. Protecting those remote values even with explicit local status requires a future read/conflict policy.
 - `Categories` (multi-select) comes from optional frontmatter, using only the existing options.
 - `Tags` (multi-select, no options yet) comes from optional frontmatter.
 - `Published Date` (date) is set only when an entry is marked published.

@@ -7,6 +7,7 @@ struct EntryFrontmatter {
         case calliStatus = "calli_status"
         case notionPageID = "notion_page_id"
         case substackDraftID = "substack_draft_id"
+        case publishedDate = "published_date"
         case categories, tags, notes
 
         var isList: Bool { self == .categories || self == .tags }

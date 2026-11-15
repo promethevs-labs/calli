@@ -10,6 +10,13 @@
 		CA1100010000000000000001 /* StorageLocation.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1100010000000000000003; };
 		CA1100010000000000000002 /* EntryFrontmatter.swift in Sources */ = {isa = PBXBuildFile; fileRef = CA1100010000000000000004; };
 		2800F7412DA1CEA0008FE5F9 /* .gitignore in Resources */ = {isa = PBXBuildFile; fileRef = 2800F7402DA1CE9A008FE5F9 /* .gitignore */; };
+		CA1200020000000000000000 = {isa = PBXBuildFile; fileRef = CA1200010000000000000000; };
+		CA1200020000000000000001 = {isa = PBXBuildFile; fileRef = CA1200010000000000000001; };
+		CA1200020000000000000002 = {isa = PBXBuildFile; fileRef = CA1200010000000000000002; };
+		CA1200020000000000000003 = {isa = PBXBuildFile; fileRef = CA1200010000000000000003; };
+		CA1200020000000000000004 = {isa = PBXBuildFile; fileRef = CA1200010000000000000004; };
+		CA1200020000000000000005 = {isa = PBXBuildFile; fileRef = CA1200010000000000000005; };
+		CA1200020000000000000006 = {isa = PBXBuildFile; fileRef = CA1200010000000000000006; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +43,13 @@
 		2857D4702D5F8A8000EE1012 /* freewrite.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = freewrite.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		2857D4812D5F8A8100EE1012 /* freewriteTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = freewriteTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		2857D48B2D5F8A8100EE1012 /* freewriteUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = freewriteUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
+		CA1200010000000000000000 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Security/KeychainStore.swift; sourceTree = SOURCE_ROOT; };
+		CA1200010000000000000001 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Publishing/PublishTarget.swift; sourceTree = SOURCE_ROOT; };
+		CA1200010000000000000002 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Publishing/NotionConfiguration.swift; sourceTree = SOURCE_ROOT; };
+		CA1200010000000000000003 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Publishing/NotionHTTPClient.swift; sourceTree = SOURCE_ROOT; };
+		CA1200010000000000000004 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Publishing/NotionPublishTarget.swift; sourceTree = SOURCE_ROOT; };
+		CA1200010000000000000005 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Publishing/NotionBlockChunker.swift; sourceTree = SOURCE_ROOT; };
+		CA1200010000000000000006 = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = freewrite/Publishing/NotionSyncService.swift; sourceTree = SOURCE_ROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
@@ -256,6 +270,13 @@
 			files = (
 				CA1100010000000000000001,
 				CA1100010000000000000002,
+				CA1200020000000000000006,
+				CA1200020000000000000005,
+				CA1200020000000000000004,
+				CA1200020000000000000003,
+				CA1200020000000000000002,
+				CA1200020000000000000001,
+				CA1200020000000000000000,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

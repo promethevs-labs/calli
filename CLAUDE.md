@@ -87,11 +87,40 @@ metadata codec. It is deliberately not connected to the editor or autosave yet:
 the existing loader strips newlines and saves the entire editor string. Do not
 add metadata to live entries until body-only editing and metadata retention are wired.
 `freewrite/Security/KeychainStore.swift` wraps local generic passwords under
-`com.calli.secrets`, with status-only errors and no logging. No publishing clients
-are implemented. The only added entitlement is outgoing network client access.
+`com.calli.secrets`, with status-only errors and no logging. The only added entitlement is outgoing
+network client access.
 Unit tests compile the storage helpers directly without an app host, so they do
 not launch ContentView or access personal entries. Run only the unit-test target;
 the upstream UI-test templates launch the real app.
+
+## Phase 2 Notion publishing (mock verified only)
+
+`freewrite/Publishing/` contains the injected transport, Notion adapter, fallback
+block chunker and file sync service. Nothing is wired to ContentView or autosave.
+Tests use an in-memory mock and dummy authorization data, never URLSession or the
+Keychain. No live Notion requests or secret writes are part of Phase 2.
+`NotionConfiguration.swift` owns both Blog Posts ids and API version 2026-03-11.
+The production token provider reads `notion-token` from `com.calli.secrets`.
+
+Create sends Status `writing`; update sends Status only for an explicit supported
+`calli_status`. Without a remote read, an explicit local status can overwrite a
+remote `kiv`, `not worth` or `give up`; an absent status preserves it. Optional
+`published_date` is sent only when the effective outgoing status is `published`.
+Unsupported known frontmatter fails before publishing. Unknown keys and body are
+preserved on ID write-back. Paths under Videos (including symlinks) are refused.
+
+Reuse one `NotionSyncService` per publishing session. It rejects concurrent pushes
+of the same file, persists the returned id atomically, and retains a pending result
+if persistence fails so the next call retries disk before networking. There are no
+automatic network retries. A lost create response or process exit before durable
+ID write-back still needs manual reconciliation in Notion to avoid a duplicate.
+The fallback chunker is standalone, not an automatic append retry after a partial
+markdown operation. See `docs/NOTION.md` before any separately authorized live test.
+`scripts/notion-live-test.sh --compile-only` builds the opt-in smoke harness without
+Keychain or network access. Live execution requires `CALLI_LIVE_TEST=1` and passes
+the token only through `CALLI_NOTION_TOKEN`. Its transport restricts requests to
+one create and the two update PATCHes for that returned page, blocking recreation
+and redirects. Never run it as part of routine tests.
 
 ## Data Model
 
